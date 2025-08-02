@@ -1,0 +1,28 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  {% if subscription %}
+    <h3>Your Plan: {{ subscription.plan.name }}</h3>
+    <p>Active from {{ subscription.start_date|date:"M j, Y" }} 
+      to {{ subscription.end_date|date:"M j, Y" }}.</p>
+    <p>Status: {{ subscription.is_active|yesno:"Active,Expired" }}</p>
+
+    <h5 class="mt-4">Plan Features:</h5>
+    <ul>
+      {% for feature in subscription.plan.feature_list %}
+        <li>{{ feature }}</li>
+      {% empty %}
+        <li>No features listed.</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p><em>No active subscription.</em> 
+       <a href="{% url 'subscribe' %}" class="btn btn-primary">
+         Subscribe Now
+       </a>
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

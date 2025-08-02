@@ -1,0 +1,116 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+
+{% block title %}About Us - My Blogs{% endblock %}
+
+{% block head %}
+<style>
+  .about-section {
+    padding: 60px 0;
+  }
+
+  .section-title {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    color: #343a40;
+  }
+
+  .founder-img {
+    width: 100%;
+    border-radius: 12px;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .service-box {
+    background-color: #f1f1f1;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  }
+
+  .feature-icon {
+    font-size: 2rem;
+    color: #28a745;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container about-section">
+
+  <!-- Company Introduction -->
+  <div class="mb-5">
+    <h2 class="section-title">About My Blogs</h2>
+    <p>
+      <strong>My Blogs</strong> is a growing Indian Blogs brand offering curated blogs across diverse categories like tech, fashion, and essentials. We are committed to making online blogs simpler, faster, and more reachable for everyone.
+    </p>
+    <p>
+      Since our inception in 2025, we have focused on quality, affordability, and uploading blogs. What began as a simple idea has evolved into a full-fledged online platform trusted by thousands. Our goal is to deliver happiness and knowlegable blogs at a time.
+    </p>
+  </div>
+
+  <!-- Founder Section -->
+  <div class="mb-5 row align-items-center">
+    <div class="col-md-5">
+      <img src="{% static 'shop/manas-chawla.jpg' %}" alt="Founder Image" class="founder-img">
+    </div>
+    <div class="col-md-7">
+      <h2 class="section-title">Meet Our Founder</h2>
+      <p>
+        <strong>Manas Chawla</strong>, the founder of My Blogs, is a passionate entrepreneur with a clear mission—to revolutionize online blogs-reading in India. With a background in technology and business, Manas brings both innovation and empathy to the table.
+      </p>
+      <p>
+        His vision has shaped the company's strong values: customer satisfaction, honesty, and ease of access. Under his leadership, the company continues to grow with a focus on trust and service excellence.
+      </p>
+    </div>
+  </div>
+
+  <!-- Our Services -->
+  <div class="mb-5">
+    <h2 class="section-title">What We Offer</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="service-box text-center">
+          <div class="feature-icon mb-2">&#128717;</div>
+          <h5>Variety of Blogs</h5>
+          <p>Hand-picked collection across all categories—fashion, gadgets, tech & more.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-box text-center">
+          <div class="feature-icon mb-2">&#9201;</div>
+          <h5>Time to Time Blogs</h5>
+          <p>Reliable and fast blog uploads ensuring on-time information and knowledge at your device.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-box text-center">
+          <div class="feature-icon mb-2">&#128222;</div>
+          <h5>24/7 Support</h5>
+          <p>Friendly customer support team available round the clock for your queries.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vision -->
+  <div class="mb-5">
+    <h2 class="section-title">Our Vision</h2>
+    <p>
+      To build India's most customer-centric blog platform that not only delivers knowledge but trust, value, and convenience. Our long-term vision is to empower every individual by making digital blogs safe, informative, and accessible.
+    </p>
+    <p>
+      We aim to continuously innovate, adopt new technologies, and maintain a service-first mindset that makes My Blogs a household name in Indian Blogs.
+    </p>
+  </div>
+
+</div>
+{% endblock %}
