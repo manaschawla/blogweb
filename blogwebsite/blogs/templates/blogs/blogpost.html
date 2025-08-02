@@ -1,0 +1,188 @@
+{% extends 'blogs/basic.html' %}
+{% block head %}
+<style>
+/* Blog Post Container */
+.blog-post {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 50px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.blog-post:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Main Blog Title */
+.blog-post h3 {
+    color: #1a1a2e;
+    font-weight: 800;
+    font-size: 2.2rem;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+}
+
+/* Section Headings */
+.blog-post h4 {
+    margin-top: 35px;
+    font-size: 1.6rem;
+    color: #102c57;
+    font-weight: 700;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+}
+
+/* Paragraphs */
+.blog-post p {
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #444;
+    margin-bottom: 28px;
+}
+
+/* Images */
+.blog-post img {
+    border-radius: 10px;
+    max-height: 480px;
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Publication Info */
+.blog-post .text-muted {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Sidebar Styling */
+.blog-sidebar {
+    padding-top: 20px;
+}
+
+.blog-sidebar .bg-light {
+    background-color: #f8f9fa !important;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.blog-sidebar h4 {
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+}
+
+.blog-sidebar .list-unstyled li a {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: color 0.3s;
+}
+
+.blog-sidebar .list-unstyled li a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .blog-post {
+        padding: 20px;
+    }
+
+    .blog-post h3 {
+        font-size: 1.8rem;
+    }
+
+    .blog-post h4 {
+        font-size: 1.35rem;
+    }
+
+    .blog-post p {
+        font-size: 1.05rem;
+    }
+
+    .blog-sidebar h4 {
+        font-size: 1.3rem;
+    }
+
+    .blog-sidebar .list-unstyled li a {
+        font-size: 1rem;
+    }
+}
+.read:hover{
+    transform: scale(110%);
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+{% load static %}
+<div class="container">
+    <h1 class="display-4 fw-bold text-center mt-4">Welcome To My Blogs</h1>
+    <div class="row mt-4">
+        
+        <!-- Blog Posts Section -->
+        <div class="col-md-8 blog-main">
+            {% for post in allblogs %}
+            <div class="blog-post mb-5">
+                <!-- Blog Title -->
+                <h3 class="pb-2 mb-3 font-italic border-bottom">{{ post.title }}</h3>
+
+                <!-- First Section Preview -->
+                <h4>{{ post.head0 }}</h4>
+                <p class="text-muted">{{ post.pub_date }} by <a href="#">{{ post.author }}</a></p>
+
+                <img src="{{ post.image_thumbnail.url }}" class="img-fluid mb-3" alt="Blog Thumbnail">
+
+                <p>{{ post.chead0|truncatewords:40 }}</p>
+
+                <!-- Read More Button -->
+                <a href="{% url 'fullview' post.post_id %}" class="btn btn-primary mt-2 read">Read More</a>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sidebar Section -->
+        <aside class="col-md-4 blog-sidebar">
+    <!-- About Section -->
+    <div class="p-4 mb-3 bg-light rounded shadow-sm">
+        <h4 class="font-italic">About</h4>
+        <p>
+            Hi there! I'm glad you're here. This blog is a personal space where I share ideas, thoughts, and knowledge on topics I’m passionate about — including technology, web development, personal growth, and creative thinking.
+        </p>
+        <p>
+            Every post reflects a learning experience or a moment of inspiration. Whether you're a fellow learner, developer, or just curious, I hope you find something valuable and inspiring here.
+        </p>
+    </div>
+
+    <!-- Contact / Social Links -->
+    <div class="p-4 bg-light rounded shadow-sm">
+        <h4 class="font-italic">Connect with Me</h4>
+        <ol class="list-unstyled">
+            <li><a href="https://github.com/yourusername" target="_blank">GitHub</a></li>
+            <li><a href="https://twitter.com/yourusername" target="_blank">Twitter</a></li>
+            <li><a href="https://facebook.com/yourusername" target="_blank">Facebook</a></li>
+            <li><a href="mailto:your.email@example.com">Email</a></li>
+            <li><a href="https://www.linkedin.com/in/yourusername/" target="_blank">LinkedIn</a></li>
+        </ol>
+    </div>
+</aside>
+
+    </div>
+</div>
+{% endblock %}

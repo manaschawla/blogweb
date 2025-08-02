@@ -1,0 +1,177 @@
+{% extends 'blogs/basic.html' %}
+{% block head %}
+<style>
+/* Blog Post Container */
+.blog-post {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 50px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.flexing{
+    display: flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+.blog-post:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Main Blog Title */
+.blog-post h3 {
+    color: #1a1a2e;
+    font-weight: 800;
+    font-size: 2.2rem;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+}
+
+/* Section Headings */
+.blog-post h4 {
+    margin-top: 35px;
+    font-size: 1.6rem;
+    color: #102c57;
+    font-weight: 700;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+}
+
+/* Paragraphs */
+.blog-post p {
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #444;
+    margin-bottom: 28px;
+}
+
+/* Images */
+.blog-post img {
+    border-radius: 10px;
+    max-height: 480px;
+    object-fit: cover;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Publication Info */
+.blog-post .text-muted {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Sidebar Styling */
+.blog-sidebar {
+    padding-top: 20px;
+}
+
+.blog-sidebar .bg-light {
+    background-color: #f8f9fa !important;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.blog-sidebar h4 {
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+}
+
+.blog-sidebar .list-unstyled li a {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: color 0.3s;
+}
+
+.blog-sidebar .list-unstyled li a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .blog-post {
+        padding: 20px;
+    }
+
+    .blog-post h3 {
+        font-size: 1.8rem;
+    }
+
+    .blog-post h4 {
+        font-size: 1.35rem;
+    }
+
+    .blog-post p {
+        font-size: 1.05rem;
+    }
+
+    .blog-sidebar h4 {
+        font-size: 1.3rem;
+    }
+
+    .blog-sidebar .list-unstyled li a {
+        font-size: 1rem;
+    }
+}
+.read:hover{
+    transform: scale(110%);
+}
+</style>
+{% endblock %}
+{% block content %}
+{% load static %}
+{%if not subscription.is_active %}
+<div class="container text-center my-5">
+    <h1 class="text-danger">No Subscription!</h1>
+    <p class="mt-3">Please subscribing to enjoy your benefits.</p>
+    <h2 class="mt-3 text-info">Click on the button to subscribe.</h2>
+    <button class="btn btn-primary text-white mt-3"><a class="text-white text-decoration-none" href="{% url 'plans' %}">Subscribe</a></button>
+</div>
+
+{%else%}
+<div class="container">
+    <h1 class="display-4 fw-bold text-center mt-4">Welcome To My Blogs</h1>
+    <div class="row mt-4 flexing">
+        
+        <!-- Blog Posts Section -->
+        <div class="col-md-8 blog-main">
+            
+            <div class="blog-post mb-5">
+                <h3 class="pb-2 mb-3 font-italic border-bottom">{{ blogdata.title }}</h3>
+
+                <!-- First Section -->
+                <h4>{{ blogdata.head0 }}</h4>
+                <p class="text-muted">{{ blogdata.pub_date }} by <a href="#">{{ blogdata.author }}</a></p>
+                <img src="{{ blogdata.image_thumbnail.url }}" class="img-fluid mb-3" alt="Image 1">
+                <p>{{ blogdata.chead0 }}</p>
+
+                <!-- Second Section -->
+                <h4>{{ blogdata.head1 }}</h4>
+                <img src="{{ blogdata.image1.url }}" class="img-fluid mb-3" alt="Image 2">
+                <p>{{ blogdata.chead1 }}</p>
+
+                <!-- Third Section -->
+                <h4>{{ blogdata.head2 }}</h4>
+                <img src="{{ blogdata.image2.url }}" class="img-fluid mb-3" alt="Image 3">
+                <p>{{ blogdata.chead2 }}</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endif%}
+{% endblock %}

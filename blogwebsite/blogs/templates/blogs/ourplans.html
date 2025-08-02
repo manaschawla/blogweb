@@ -1,0 +1,62 @@
+{% extends 'blogs/basic.html' %} {% load static %} {% block head %}
+<style>
+  .cards-area {
+    background-color: rgb(3, 132, 206);
+    color: white;
+    border-color: rgb(3, 132, 206);
+    border-radius: 15px;
+  }
+  .card {
+    border-radius: 1.25rem;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    {% for plan in plan_variable %}
+    <div class="col-md-4">
+      <div
+        class="card h-100 rounded-5 shadow {% if forloop.counter == 2 %}text-white bg-primary cards-area{% else %}bg-white text-dark{% endif %}"
+      >
+        <div class="card-body d-flex flex-column">
+          <h1 class="card-title text-center">{{ plan.name }}</h1>
+          <div class="text-center my-3">
+            <h1 class="d-inline">₹{{ plan.price }}</h1>
+            <span class="text-light-emphasis">/Month</span>
+          </div>
+          <p class="text-center fw-bold">Duration: {{ plan.duration }} Days</p>
+          <hr class="border-light" />
+
+          <ul class="list-unstyled px-3 mb-4">
+            {% for feature in plan.features.splitlines %}
+            <li class="d-flex align-items-center mb-2">
+              <img
+                src="{% static 'blogs/images/blue-tick.svg' %}"
+                alt=""
+                class="me-2"
+                width="20"
+              />
+              {{ feature }}
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="mt-auto text-center">
+
+            <form method="post" action="{% url 'subscribe' %}">
+              {% csrf_token %}
+              <input type="hidden" name="plan_id" value="{{ plan.id }}">
+              <button
+                class="btn fw-bold px-4 py-2 rounded-pill w-100 {% if forloop.counter == 2 %}btn-light{%else%}btn-primary text-white{%endif%}"
+              >
+                Select
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
