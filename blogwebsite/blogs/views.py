@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription
+from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -10,6 +10,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
+import razorpay
+from django.conf import settings
 # Create your views here.
 
 def register(request):
@@ -100,21 +102,20 @@ def our_plans(request):
     return render(request, 'blogs/ourplans.html', {'plan_variable':our_plans})
 
 @login_required
-def subscribe(request):
+def subscribe(request, plan_id):  # <- accept plan_id from URL
     if request.method == 'POST':
-        plan_id = request.POST.get('plan_id')
-        plan =  SubscriptionPlan.objects.get(id=plan_id)
-        
+        plan = SubscriptionPlan.objects.get(id=plan_id)
+
         UserSubscription.objects.update_or_create(
-        user=request.user,
-        defaults={
+            user=request.user,
+            defaults={
                 'plan': plan,
                 'start_date': timezone.now(),
                 'end_date': timezone.now() + timedelta(days=plan.duration)
             }
         )
-        return redirect('subscription-success')
-    return redirect('plans')  
+        return redirect('pay_method', plan_id=plan.id)
+
 
 def subscription_success(request):
     return render(request, 'blogs/success.html')
@@ -127,11 +128,35 @@ def subscription_view(request):
 
     return render(request, 'blogs/subscription_view.html', {'subscription': subscription})
 
+
+def pay_method(request,plan_id):
+    plan = get_object_or_404(SubscriptionPlan, id=plan_id)
+
+    if request.method == 'POST':
+        payment_method = request.POST.get('payment_method')
+
+        if payment_method in ['upi', 'cod']:
+            Payment.objects.create(
+                user=request.user,
+                plan=plan,
+                payment_method=payment_method,
+                status='success',
+                amount=plan.price,
+            )
+            return render(request, 'blogs/success.html', {'plan': plan})
+
+        elif payment_method in ['bank', 'cards', 'netbanking']:
+            return redirect('razorpay_payment', plan_id=plan.id)
+
+    return render(request, 'blogs/select_pay_method.html', {'plan': plan})
+
+
+    
 @login_required
 def upload(request):
+    success= False
     try:
         subscription = UserSubscription.objects.get(user=request.user)
-        success= False
         if request.method == "POST":
             author = request.POST.get('author')
             title = request.POST.get('title')
@@ -163,3 +188,25 @@ def test_email(request):
         fail_silently=False,
     )
     return HttpResponse("Test email sent. Check your terminal.")
+
+def razorpay_payment_view(request,plan_id):
+    plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
+    
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    
+    payment = client.order.create({
+        "amount": int(plan.price * 100), 
+        "currency": "INR",
+        "payment_capture": 1
+    })
+
+    context = {
+        'plan': plan,
+        'payment': payment,
+        'razorpay_key': settings.RAZORPAY_KEY_ID
+    }
+
+    return render(request, 'blogs/payment_razorpay.html', context)
+
+def payment_success(request, plan_id):
+    return render(request, 'blogs/success.html')

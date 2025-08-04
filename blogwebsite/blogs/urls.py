@@ -11,7 +11,6 @@ path("", views.index, name = "home"),
     path("about", views.about, name = "about"),
     path("upload", views.upload, name = "upload"),
     path("plans/", views.our_plans, name = "plans"),
-    path('subscribe/', views.subscribe, name='subscribe'),
     path('success/', views.subscription_success, name='subscription-success'),
     path("profile<int:user_id>", views.profile, name = "profile"),
     path('fullview/<int:myid>', views.blog_view, name='fullview'),
@@ -21,6 +20,10 @@ path("", views.index, name = "home"),
     path('profile/<int:user_id>/edit/', views.edit_profile, name='edit_profile'),
 path('subscriptionview/', views.subscription_view, name='subscriptionview'),
  path('test-email/', views.test_email),
+  path('subscribe/<int:plan_id>/', views.subscribe, name='subscribe'),
+  path('paypage/<int:plan_id>/', views.pay_method, name='pay_method'),
+  path('razorpay/<int:plan_id>/', views.razorpay_payment_view, name='razorpay_payment'),
+path('payment/success/<int:plan_id>/', views.payment_success, name='payment_success'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

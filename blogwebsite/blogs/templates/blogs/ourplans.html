@@ -43,14 +43,14 @@
 
           <div class="mt-auto text-center">
 
-            <form method="post" action="{% url 'subscribe' %}">
-              {% csrf_token %}
-              <input type="hidden" name="plan_id" value="{{ plan.id }}">
-              <button
-                class="btn fw-bold px-4 py-2 rounded-pill w-100 {% if forloop.counter == 2 %}btn-light{%else%}btn-primary text-white{%endif%}"
-              >
-                Select
-              </button>
+<form method="post" action="{% url 'subscribe' plan.id %}">
+  {% csrf_token %}
+  <button type="submit"
+          class="btn fw-bold px-4 py-2 rounded-pill w-100 {% if forloop.counter == 2 %}btn-light{% else %}btn-primary text-white{% endif %}">
+    Subscribe
+  </button>
+</form>
+
             </form>
           </div>
         </div>

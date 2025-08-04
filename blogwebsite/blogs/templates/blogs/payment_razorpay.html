@@ -1,0 +1,25 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center mb-4">Pay with Razorpay</h2>
+  <p>Plan: <strong>{{ plan.name }}</strong></p>
+  <p>Amount: ₹{{ plan.price }}</p>
+
+  <form action="{% url 'payment_success' plan.id %}" method="POST">
+    <script
+      src="https://checkout.razorpay.com/v1/checkout.js"
+      data-key="{{ razorpay_key }}"
+      data-amount="{{ payment.amount }}"
+      data-currency="INR"
+      data-order_id="{{ payment.id }}"
+      data-buttontext="Pay with Razorpay"
+      data-name="Your Blog"
+      data-description="Subscription Payment"
+      data-theme.color="#3399cc">
+    </script>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+  </form>
+</div>
+{% endblock %}

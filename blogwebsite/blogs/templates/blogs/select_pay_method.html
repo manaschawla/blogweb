@@ -1,0 +1,23 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+
+{%block content%}
+<div class="container">
+    <h2>You're Subscribing to: {{ plan.name }}</h2>
+<p>Price: ₹{{ plan.price }}</p>
+<p>Features: {{ plan.features }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Select Payment Method:</label><br>
+    <input type="radio" name="payment_method" value="upi" required> UPI<br>
+    <input type="radio" name="payment_method" value="bank"> Bank Transfer<br>
+    <input type="radio" name="payment_method" value="cod"> Cash on Delivery<br>
+    <input type="radio" name="payment_method" value="cards"> Cards<br>
+    <input type="radio" name="payment_method" value="netbanking"> Net Banking<br><br>
+
+    <button type="submit" class="btn btn-success">Proceed to Payment</button>
+</form>
+
+</div>
+{%endblock%}
