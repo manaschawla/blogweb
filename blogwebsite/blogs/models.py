@@ -30,10 +30,16 @@ class Blogpost(models.Model):
         return str(self.title)
 
 class Custom_user(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True, blank=True)
+    ROLE_CHOICES = (
+        ('User', 'User'),
+        ('Blogger', 'Blogger'),
+        # ('Editor', 'Editor'),  # You can add this later
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='custom_user', null=True, blank=True)
     profile_picture = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     first_name = models.CharField(max_length=50, default="not defined")
     last_name = models.CharField(max_length=50, default="not defined")
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='User')
     email = models.EmailField(max_length=60, default="not defined")
     country = models.CharField(max_length=50, default= "not defined")
     state = models.CharField(max_length=50, default= "not defined")
@@ -44,7 +50,8 @@ class Custom_user(models.Model):
 
     
     def __str__(self):
-        return str(self.first_name)
+        return f"{self.first_name} {self.last_name} ({self.role})"
+
     
     
 
