@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment
+from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment,Category
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -157,12 +157,15 @@ def upload(request):
     success= False
     try:
         subscription = UserSubscription.objects.get(user=request.user)
+        categories = Category.objects.all()
         if request.method == "POST":
             author = request.POST.get('author')
             title = request.POST.get('title')
             head0 = request.POST.get('head0')
             chead0 = request.POST.get('chead0')
             head1 = request.POST.get('head1')
+            category_id = request.POST.get('category')
+            category = Category.objects.get(id=category_id)
             chead1 = request.POST.get('chead1')
             chead2 = request.POST.get('chead2')
             head2 = request.POST.get('head2')
@@ -170,14 +173,14 @@ def upload(request):
             image_thumbnail = request.FILES.get('image_thumbnail')
             image1 = request.FILES.get('image1')
             image2 = request.FILES.get('image2')
-            blog = Blogpost(author=author,title = title,head0 = head0,chead0 = chead0,pub_date= pub_date, head1 = head1,chead1 = chead1,head2 = head2,chead2 =chead2,image_thumbnail = image_thumbnail,image1 = image1,image2 = image2)
+            blog = Blogpost(author=author,title = title,head0 = head0, category = category,chead0 = chead0,pub_date= pub_date, head1 = head1,chead1 = chead1,head2 = head2,chead2 =chead2,image_thumbnail = image_thumbnail,image1 = image1,image2 = image2)
             blog.save()
             success = True
 
             
     except UserSubscription.DoesNotExist:
         subscription = None
-    return render(request, 'blogs/upload.html',{'subscription': subscription, 'success': success})
+    return render(request, 'blogs/upload.html',{'subscription': subscription, 'success': success , 'categories': categories})
 
 def test_email(request):
     send_mail(
@@ -210,3 +213,24 @@ def razorpay_payment_view(request,plan_id):
 
 def payment_success(request, plan_id):
     return render(request, 'blogs/success.html')
+
+
+def food_category(request):
+    food = Blogpost.objects.filter(category__category_name__iexact='food')
+    print(food)
+    return render(request, "blogs/food_post.html", {'food': food})
+
+def tech_category(request):
+    tech = Blogpost.objects.filter(category__category_name__iexact='tech')
+    print(tech)
+    return render(request, "blogs/tech_post.html", {'tech': tech})
+
+def life_category(request):
+    life = Blogpost.objects.filter(category__category_name__iexact='lifestyle')
+    print(life)
+    return render(request, "blogs/life_post.html", {'life': life})
+
+def travel_category(request):
+    travel = Blogpost.objects.filter(category__category_name__iexact='travel')
+    print(travel)
+    return render(request, "blogs/travel_post.html", {'travel': travel})

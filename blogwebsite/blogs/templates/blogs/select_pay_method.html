@@ -5,7 +5,15 @@
 <div class="container">
     <h2>You're Subscribing to: {{ plan.name }}</h2>
 <p>Price: ₹{{ plan.price }}</p>
-<p>Features: {{ plan.features }}</p>
+<p>Features:
+</p>
+ <ul>
+      {% for feature in plan.feature_list %}
+        <li>{{ feature }}</li>
+      {% empty %}
+        <li>No features listed.</li>
+      {% endfor %}
+    </ul>
 
 <form method="post">
     {% csrf_token %}

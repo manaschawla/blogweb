@@ -4,12 +4,19 @@ from django.utils import timezone
 from datetime import timedelta
 # Create your models here.
 
+class Category(models.Model):
+    category_name = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.category_name
+    
 class Blogpost(models.Model):
     author = models.CharField(max_length=100, default="Anonymous")
     post_id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=50)
     head0 = models.CharField(max_length=500, default="")
     head1= models.CharField(max_length=500, default="")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     head2= models.CharField(max_length=500, default="")
     chead0= models.CharField(max_length=5000, default="")
     chead1=models.CharField(max_length=5000, default="")

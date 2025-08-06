@@ -26,10 +26,10 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Categories</a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Tech</a></li>
-              <li><a class="dropdown-item" href="#">Lifestyle</a></li>
-              <li><a class="dropdown-item" href="#">Travel</a></li>
-              <li><a class="dropdown-item" href="#">food</a></li>
+              <li><a class="dropdown-item" href="{% url 'tech' %}">Tech</a></li>
+              <li><a class="dropdown-item" href="{% url 'lifestyle' %}">Lifestyle</a></li>
+              <li><a class="dropdown-item" href="{% url 'travel' %}">Travel</a></li>
+              <li><a class="dropdown-item" href="{% url 'food' %}">food</a></li>
             </ul>
           </li>
           <li class="nav-item"><a class="nav-link active border border-info rounded" href="{% url 'upload' %}">Upload Your Blogs</a></li>

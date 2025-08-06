@@ -24,6 +24,10 @@ path('subscriptionview/', views.subscription_view, name='subscriptionview'),
   path('paypage/<int:plan_id>/', views.pay_method, name='pay_method'),
   path('razorpay/<int:plan_id>/', views.razorpay_payment_view, name='razorpay_payment'),
 path('payment/success/<int:plan_id>/', views.payment_success, name='payment_success'),
+path("food", views.food_category, name = "food"),
+path("tech", views.tech_category, name = "tech"),
+path("lifestyle", views.life_category, name = "lifestyle"),
+path("travel", views.travel_category, name = "travel"),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

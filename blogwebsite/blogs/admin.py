@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Blogpost, Custom_user,SubscriptionPlan,UserSubscription,Payment
+from .models import Blogpost, Custom_user,SubscriptionPlan,UserSubscription,Payment,Category
 # Register your models here.
 admin.site.register(Blogpost)
 admin.site.register(Custom_user)
+admin.site.register(Category)
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
