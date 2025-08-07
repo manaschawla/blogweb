@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Blogpost, Custom_user,SubscriptionPlan,UserSubscription,Payment,Category
+from .models import Blogpost, Custom_user,SubscriptionPlan,UserSubscription,Payment,Category,RequestRole
 # Register your models here.
 admin.site.register(Blogpost)
 admin.site.register(Custom_user)
 admin.site.register(Category)
+admin.site.register(RequestRole)
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):

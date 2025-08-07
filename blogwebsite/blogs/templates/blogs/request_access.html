@@ -1,0 +1,15 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+
+{%block content%}
+<div class="container">
+<h2>You are not allowed to upload blogs.</h2>
+<p>Please request access to become a Blogger.</p>
+
+<form method="POST" action="{% url 'send_blogger_request' %}">
+    {% csrf_token %}
+    <button type="submit">Request Blogger Access</button>
+</form>
+
+</div>
+{%endblock%}

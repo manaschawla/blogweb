@@ -52,7 +52,23 @@ class Custom_user(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
 
-    
+from django.db import models
+from django.contrib.auth.models import User
+
+class RequestRole(models.Model):
+    ROLE_CHOICES = (
+        ('Blogger', 'Blogger'),
+        ('Editor', 'Editor'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    requested_role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} requested {self.requested_role}"
+
     
 
 class SubscriptionPlan(models.Model):

@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment,Category
+from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment,Category,RequestRole
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -152,35 +152,6 @@ def pay_method(request,plan_id):
 
 
     
-@login_required
-def upload(request):
-    success= False
-    try:
-        subscription = UserSubscription.objects.get(user=request.user)
-        categories = Category.objects.all()
-        if request.method == "POST":
-            author = request.POST.get('author')
-            title = request.POST.get('title')
-            head0 = request.POST.get('head0')
-            chead0 = request.POST.get('chead0')
-            head1 = request.POST.get('head1')
-            category_id = request.POST.get('category')
-            category = Category.objects.get(id=category_id)
-            chead1 = request.POST.get('chead1')
-            chead2 = request.POST.get('chead2')
-            head2 = request.POST.get('head2')
-            pub_date = request.POST.get('pub_date')
-            image_thumbnail = request.FILES.get('image_thumbnail')
-            image1 = request.FILES.get('image1')
-            image2 = request.FILES.get('image2')
-            blog = Blogpost(author=author,title = title,head0 = head0, category = category,chead0 = chead0,pub_date= pub_date, head1 = head1,chead1 = chead1,head2 = head2,chead2 =chead2,image_thumbnail = image_thumbnail,image1 = image1,image2 = image2)
-            blog.save()
-            success = True
-
-            
-    except UserSubscription.DoesNotExist:
-        subscription = None
-    return render(request, 'blogs/upload.html',{'subscription': subscription, 'success': success , 'categories': categories})
 
 def test_email(request):
     send_mail(
@@ -234,3 +205,65 @@ def travel_category(request):
     travel = Blogpost.objects.filter(category__category_name__iexact='travel')
     print(travel)
     return render(request, "blogs/travel_post.html", {'travel': travel})
+
+def upload_check(request):
+    custom_user = request.user.custom_user
+    if custom_user.role == 'blogger':
+        return render(request, 'blogs/upload.html')
+    
+    else:
+        existing_request = RequestRole.objects.filter(user=request.user).first()
+        
+        if existing_request:
+            if existing_request.is_approved == 'True':
+                return render(request, 'blogs/request_approved.html')
+            else:
+                return render(request, 'blogs/request_pending.html')
+        else:
+            return render(request, 'blogs/request_access.html')  
+        
+@login_required
+def upload(request):
+    success= False
+    try:
+        subscription = UserSubscription.objects.get(user=request.user)
+        categories = Category.objects.all()
+        if request.method == "POST":
+            author = request.POST.get('author')
+            title = request.POST.get('title')
+            head0 = request.POST.get('head0')
+            chead0 = request.POST.get('chead0')
+            head1 = request.POST.get('head1')
+            category_id = request.POST.get('category')
+            category = Category.objects.get(id=category_id)
+            chead1 = request.POST.get('chead1')
+            chead2 = request.POST.get('chead2')
+            head2 = request.POST.get('head2')
+            pub_date = request.POST.get('pub_date')
+            image_thumbnail = request.FILES.get('image_thumbnail')
+            image1 = request.FILES.get('image1')
+            image2 = request.FILES.get('image2')
+            blog = Blogpost(author=author,title = title,head0 = head0, category = category,chead0 = chead0,pub_date= pub_date, head1 = head1,chead1 = chead1,head2 = head2,chead2 =chead2,image_thumbnail = image_thumbnail,image1 = image1,image2 = image2)
+            blog.save()
+            success = True
+
+            
+    except UserSubscription.DoesNotExist:
+        subscription = None
+    return render(request, 'blogs/upload.html',{'subscription': subscription, 'success': success , 'categories': categories})
+
+
+def send_blogger_request(request):
+    if request.method == 'POST':
+        existing = RequestRole.objects.filter(user=request.user).first()
+        if not existing:
+            RequestRole.objects.create(
+                user=request.user,
+                requested_role='Blogger'
+            )
+        return redirect('request_pending')
+    else:
+        return redirect('upload_blog')
+    
+def request_pending(request):
+    return render(request, 'blogs/request_pending.html')
