@@ -12,6 +12,8 @@ from django.utils import timezone
 from datetime import timedelta
 import razorpay
 from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 
 def register(request):
@@ -92,8 +94,31 @@ def blog_view(request, myid):
         subscription = UserSubscription.objects.get(user=request.user)
     except UserSubscription.DoesNotExist:
         subscription = None
-    blog_data = Blogpost.objects.filter(post_id = myid)
-    return render(request, 'blogs/fullview.html', {'blogdata': blog_data[0], 'subscription': subscription})
+
+    blog = get_object_or_404(Blogpost, post_id=myid)  # returns one object
+    blog.views += 1
+    blog.save(update_fields=['views'])
+
+    return render(request, 'blogs/fullview.html', {
+        'blogdata': blog,
+        'subscription': subscription
+    })
+
+
+
+
+def toggle_like(request, blog_id):
+    blog = get_object_or_404(Blogpost, post_id=blog_id)
+
+    if request.user in blog.likes.all():
+        blog.likes.remove(request.user)
+    else:
+        blog.likes.add(request.user)
+
+    blog.views = max(0, blog.views - 1)
+    blog.save(update_fields=['views'])
+
+    return redirect('fullview', blog_id)
 
 
 

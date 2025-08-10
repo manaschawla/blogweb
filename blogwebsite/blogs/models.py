@@ -18,7 +18,8 @@ class Blogpost(models.Model):
     head1= models.CharField(max_length=500, default="")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     head2= models.CharField(max_length=500, default="")
-
+    views = models.PositiveIntegerField(default=0)  # Count blog views
+    likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)
     chead0= models.CharField(max_length=5000, default="")
     chead1=models.CharField(max_length=5000, default="")
     chead2=models.CharField(max_length=5000, default="")
@@ -26,6 +27,9 @@ class Blogpost(models.Model):
     image_thumbnail = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image1 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image2 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
+
+    def total_likes(self):
+        return self.likes.count()
     
     def __str__(self):
         return str(self.title)

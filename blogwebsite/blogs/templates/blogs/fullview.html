@@ -173,5 +173,43 @@
 
     </div>
 </div>
+<div class="container my-5">
+    <div class="p-4 rounded-4 shadow-sm bg-white" style="max-width: 600px; margin: auto;">
+        <div class="row text-center g-4">
+            <!-- Views -->
+            <div class="col-6 d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle d-flex justify-content-center align-items-center mb-2" style="width: 60px; height: 60px;">
+                    <i class="bi bi-eye-fill fs-3 text-primary"></i>
+                </div>
+                <h5 class="text-muted mb-1">Views</h5>
+                <h3 class="fw-bold text-primary">{{ blogdata.views }}</h3>
+            </div>
+
+            <!-- Likes -->
+            <div class="col-6 d-flex flex-column align-items-center">
+                <div class="bg-light rounded-circle d-flex justify-content-center align-items-center mb-2" style="width: 60px; height: 60px;">
+                    <i class="bi bi-heart-fill fs-3 text-danger"></i>
+                </div>
+                <h5 class="text-muted mb-1">Likes</h5>
+                <h3 class="fw-bold text-danger">{{ blogdata.total_likes }}</h3>
+
+                <form action="{% url 'toggle_like' blogdata.post_id %}" method="POST">
+                    {% csrf_token %}
+                    {% if user in blogdata.likes.all %}
+                        <button type="submit" class="btn btn-danger btn-sm mt-2 rounded-pill px-3">
+                            <i class="bi bi-heart-fill"></i> Unlike
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm mt-2 rounded-pill px-3">
+                            <i class="bi bi-heart"></i> Like
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {%endif%}
 {% endblock %}
