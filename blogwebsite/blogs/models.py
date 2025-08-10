@@ -18,6 +18,7 @@ class Blogpost(models.Model):
     head1= models.CharField(max_length=500, default="")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     head2= models.CharField(max_length=500, default="")
+
     chead0= models.CharField(max_length=5000, default="")
     chead1=models.CharField(max_length=5000, default="")
     chead2=models.CharField(max_length=5000, default="")
@@ -25,7 +26,7 @@ class Blogpost(models.Model):
     image_thumbnail = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image1 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image2 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
-
+    
     def __str__(self):
         return str(self.title)
 

@@ -215,7 +215,7 @@ def upload_check(request):
         existing_request = RequestRole.objects.filter(user=request.user).first()
         
         if existing_request:
-            if existing_request.is_approved == 'True':
+            if existing_request.is_approved:
                 return render(request, 'blogs/request_approved.html')
             else:
                 return render(request, 'blogs/request_pending.html')
@@ -260,6 +260,14 @@ def send_blogger_request(request):
             RequestRole.objects.create(
                 user=request.user,
                 requested_role='Blogger'
+            )
+            
+            send_mail(
+                subject='New Blogger Access Request',
+                message=f'User {request.user.username} has requested blogger access.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=['manaschawla324@gmail.com'],  # Replace with real admin email
+                fail_silently=False,
             )
         return redirect('request_pending')
     else:

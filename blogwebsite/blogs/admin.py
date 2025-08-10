@@ -1,10 +1,11 @@
 from django.contrib import admin
 from .models import Blogpost, Custom_user,SubscriptionPlan,UserSubscription,Payment,Category,RequestRole
+from django.core.mail import send_mail
+from django.conf import settings  
 # Register your models here.
 admin.site.register(Blogpost)
 admin.site.register(Custom_user)
 admin.site.register(Category)
-admin.site.register(RequestRole)
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
@@ -23,3 +24,26 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('user', 'plan', 'payment_method', 'status', 'amount', 'created_at')
     list_filter = ('payment_method', 'status')
     search_fields = ('user__username', 'plan__name', 'payment_id')
+    
+@admin.register(RequestRole)
+class RequestRoleAdmin(admin.ModelAdmin):
+    list_display = ('user', 'requested_role', 'is_approved')
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            old_obj = RequestRole.objects.get(pk=obj.pk)
+            if not old_obj.is_approved and obj.is_approved:
+                custom_user = Custom_user.objects.get(user=obj.user)
+                custom_user.role = 'Blogger'
+                custom_user.save()
+
+                # Send approval email
+                send_mail(
+                    subject='Blogger Access Approved',
+                    message=f'Hi {custom_user.first_name}, your blogger access has been approved! You can now upload blogs.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[custom_user.email],
+                    fail_silently=False,
+                )
+
+        super().save_model(request, obj, form, change)

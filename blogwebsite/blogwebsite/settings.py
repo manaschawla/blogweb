@@ -152,7 +152,7 @@ RAZORPAY_KEY_SECRET = "JDdJWeN8sZFfEeVKp5SUXZUn"
 # JDdJWeN8sZFfEeVKp5SUXZUn  <--- This is the  key secret  for Razorpay
 
 # Email backend configuration using Gmail
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

@@ -28,6 +28,7 @@ path("food", views.food_category, name = "food"),
 path("tech", views.tech_category, name = "tech"),
 path("lifestyle", views.life_category, name = "lifestyle"),
 path("travel", views.travel_category, name = "travel"),
+path("upload_check", views.upload_check, name = "upload_check"),
 path('send-blogger-request/', views.send_blogger_request, name='send_blogger_request'),
 path('request-pending/', views.request_pending, name='request_pending'), 
 
