@@ -5,6 +5,8 @@ from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Paym
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from .forms import ProfileForm,SubscriptionSelectForm
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -12,8 +14,6 @@ from django.utils import timezone
 from datetime import timedelta
 import razorpay
 from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 # Create your views here.
 
 def register(request):
@@ -95,7 +95,7 @@ def blog_view(request, myid):
     except UserSubscription.DoesNotExist:
         subscription = None
 
-    blog = get_object_or_404(Blogpost, post_id=myid)  # returns one object
+    blog = get_object_or_404(Blogpost, post_id=myid) 
     blog.views += 1
     blog.save(update_fields=['views'])
 
@@ -127,11 +127,11 @@ def our_plans(request):
     return render(request, 'blogs/ourplans.html', {'plan_variable':our_plans})
 
 @login_required
-def subscribe(request, plan_id):  # <- accept plan_id from URL
+def subscribe(request, plan_id):
     if request.method == 'POST':
         plan = SubscriptionPlan.objects.get(id=plan_id)
 
-        UserSubscription.objects.update_or_create(
+        subscription, created = UserSubscription.objects.update_or_create(
             user=request.user,
             defaults={
                 'plan': plan,
@@ -139,10 +139,14 @@ def subscribe(request, plan_id):  # <- accept plan_id from URL
                 'end_date': timezone.now() + timedelta(days=plan.duration)
             }
         )
+
+
         return redirect('pay_method', plan_id=plan.id)
 
 
 def subscription_success(request):
+    send_invoice_email(request.user, subscription) 
+    messages.success(request, "Subscription purchased successfully. Invoice sent to your email.")
     return render(request, 'blogs/success.html')
 
 def subscription_view(request):
@@ -249,10 +253,12 @@ def upload_check(request):
         
 @login_required
 def upload(request):
-    success= False
+    success = False
+    categories = Category.objects.all()  
+
     try:
         subscription = UserSubscription.objects.get(user=request.user)
-        categories = Category.objects.all()
+
         if request.method == "POST":
             author = request.POST.get('author')
             title = request.POST.get('title')
@@ -268,14 +274,34 @@ def upload(request):
             image_thumbnail = request.FILES.get('image_thumbnail')
             image1 = request.FILES.get('image1')
             image2 = request.FILES.get('image2')
-            blog = Blogpost(author=author,title = title,head0 = head0, category = category,chead0 = chead0,pub_date= pub_date, head1 = head1,chead1 = chead1,head2 = head2,chead2 =chead2,image_thumbnail = image_thumbnail,image1 = image1,image2 = image2)
+
+            blog = Blogpost(
+                author=author,
+                title=title,
+                head0=head0,
+                category=category,
+                chead0=chead0,
+                pub_date=pub_date,
+                head1=head1,
+                chead1=chead1,
+                head2=head2,
+                chead2=chead2,
+                image_thumbnail=image_thumbnail,
+                image1=image1,
+                image2=image2
+            )
             blog.save()
             success = True
 
-            
     except UserSubscription.DoesNotExist:
         subscription = None
-    return render(request, 'blogs/upload.html',{'subscription': subscription, 'success': success , 'categories': categories})
+
+    return render(
+        request,
+        'blogs/upload.html',
+        {'subscription': subscription, 'success': success, 'categories': categories}
+    )
+
 
 
 def send_blogger_request(request):
@@ -300,3 +326,27 @@ def send_blogger_request(request):
     
 def request_pending(request):
     return render(request, 'blogs/request_pending.html')
+
+def send_invoice_email(user, subscription):
+    recipient_email = user.custom_user.email
+    subject = f"Invoice for your {subscription.plan.name} Subscription"
+    message = render_to_string('blogs/emails/invoice_email.html', {
+        'custom_user': user.custom_user,
+        'subscription': subscription,
+    })
+    
+    email = EmailMessage(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [recipient_email]
+    )
+    email.content_subtype = "html" 
+    email.send()
+    
+    
+def my_blogs(request):
+    blogs = Blogpost.objects.filter(author = request.user)
+    return render(request, 'blogs/author_blogs.html', {'blogdata': blogs})
+    
+    

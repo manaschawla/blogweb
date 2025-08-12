@@ -32,5 +32,5 @@ path("upload_check", views.upload_check, name = "upload_check"),
 path('send-blogger-request/', views.send_blogger_request, name='send_blogger_request'),
 path('request-pending/', views.request_pending, name='request_pending'), 
 path('blog/<int:blog_id>/like/', views.toggle_like, name='toggle_like'),
-
+path('myblogs', views.my_blogs, name='myblogs'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

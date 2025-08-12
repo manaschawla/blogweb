@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Invoice</title>
+</head>
+<body>
+    <h2>Invoice</h2>
+    <p>Hi {{ custom_user.first_name }},</p>
+    <p>Thank you for purchasing the <strong>{{ subscription.plan.name }}</strong> subscription.</p>
+
+    <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+            <th>Plan</th>
+            <th>Price</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        <tr>
+            <td>{{ subscription.plan.name }}</td>
+            <td>${{ subscription.plan.price }}</td>
+            <td>{{ subscription.start_date|date:"F j, Y" }}</td>
+            <td>{{ subscription.end_date|date:"F j, Y" }}</td>
+        </tr>
+    </table>
+
+    <p>We appreciate your business!</p>
+</body>
+</html>

@@ -18,7 +18,7 @@ class Blogpost(models.Model):
     head1= models.CharField(max_length=500, default="")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     head2= models.CharField(max_length=500, default="")
-    views = models.PositiveIntegerField(default=0)  # Count blog views
+    views = models.PositiveIntegerField(default=0) 
     likes = models.ManyToManyField(User, related_name='liked_blogs', blank=True)
     chead0= models.CharField(max_length=5000, default="")
     chead1=models.CharField(max_length=5000, default="")
