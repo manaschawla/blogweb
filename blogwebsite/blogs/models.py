@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 # Create your models here.
 
 class Category(models.Model):
@@ -148,4 +149,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.plan.name} - {self.status}"
+    
+class LoginInstance(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    login_time = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField()
+    device_info = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.login_time}"
 

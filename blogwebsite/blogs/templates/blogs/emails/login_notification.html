@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif;">
+    <h2>New Login Detected</h2>
+    <p>Hi <strong>{{ user.username }}</strong>,</p>
+    <p>We noticed a new login to your account:</p>
+    <ul>
+        <li><strong>Date & Time:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}</li>
+        <li><strong>IP Address:</strong> {{ ip }}</li>
+        <li><strong>Device:</strong> {{ device }}</li>
+    </ul>
+    <p>If this wasn’t you, please change your password immediately.</p>
+</body>
+</html>

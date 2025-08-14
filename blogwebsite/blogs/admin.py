@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Blogpost, Custom_user, SubscriptionPlan, UserSubscription, Payment, Category, RequestRole
+from .models import Blogpost, Custom_user, SubscriptionPlan, UserSubscription, Payment, Category, RequestRole,LoginInstance
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -11,6 +11,7 @@ from django.conf import settings
 admin.site.register(Blogpost)
 admin.site.register(Custom_user)
 admin.site.register(Category)
+admin.site.register(LoginInstance)
 
 
 @admin.register(SubscriptionPlan)
