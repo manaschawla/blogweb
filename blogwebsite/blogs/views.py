@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from datetime import datetime
 from .forms import ProfileForm,SubscriptionSelectForm
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -19,6 +21,7 @@ from django.conf import settings
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
         
@@ -30,12 +33,35 @@ def register(request):
             messages.error(request, "Username already taken.")
             return render(request, 'blogs/register.html')
         
-        user = User.objects.create_user(username=username, password=password)
-        Custom_user.objects.create(user = user)
-        login(request, user) 
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered.")
+            return render(request, 'blogs/register.html')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        custom_user = Custom_user.objects.create(user=user, email=email)
+        
+        login(request, user)
+
+
+        message = render_to_string('blogs/emails/welcome_email.html', {
+            'custom_user': custom_user,
+            'site_url': 'https://yourwebsite.com' 
+        })
+
+        email_message = EmailMessage(
+            subject="Welcome to Our Blog!",
+            body=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email]
+        )
+        email_message.content_subtype = "html" 
+        email_message.send()
+
+        messages.success(request, "Registration successful! A welcome email has been sent.")
         return redirect('/')
     
     return render(request, 'blogs/register.html')
+
 
 @login_required
 def edit_profile(request, user_id):
@@ -80,7 +106,7 @@ def contact(request):
 
 
 def blogs(request):
-    blog_post = Blogpost.objects.all().order_by('-pub_date')
+    blog_post = Blogpost.objects.filter(deleted_at__isnull=True).order_by('-pub_date')
     print(blog_post)
     params = {'allblogs': blog_post}
     return render( request, 'blogs/blogpost.html',params)
@@ -144,10 +170,12 @@ def subscribe(request, plan_id):
         return redirect('pay_method', plan_id=plan.id)
 
 
-def subscription_success(request):
-    send_invoice_email(request.user, subscription) 
+def subscription_success(request, subscription_id):
+    subscription = get_object_or_404(UserSubscription, id=subscription_id)
+    send_invoice_email(request.user, subscription)
     messages.success(request, "Subscription purchased successfully. Invoice sent to your email.")
-    return render(request, 'blogs/success.html')
+    return render(request, 'blogs/success.html', {'subscription': subscription})
+
 
 def subscription_view(request):
     try:
@@ -172,9 +200,14 @@ def pay_method(request,plan_id):
                 status='success',
                 amount=plan.price,
             )
+            subscription = UserSubscription.objects.get(user=request.user)
+            send_invoice_email(request.user, subscription)
             return render(request, 'blogs/success.html', {'plan': plan})
+        
 
         elif payment_method in ['bank', 'cards', 'netbanking']:
+            subscription = UserSubscription.objects.get(user=request.user)
+            send_invoice_email(request.user, subscription)
             return redirect('razorpay_payment', plan_id=plan.id)
 
     return render(request, 'blogs/select_pay_method.html', {'plan': plan})
@@ -216,22 +249,22 @@ def payment_success(request, plan_id):
 
 
 def food_category(request):
-    food = Blogpost.objects.filter(category__category_name__iexact='food')
+    food = Blogpost.objects.filter(category__category_name__iexact='food', deleted_at__isnull=True)
     print(food)
     return render(request, "blogs/food_post.html", {'food': food})
 
 def tech_category(request):
-    tech = Blogpost.objects.filter(category__category_name__iexact='tech')
+    tech = Blogpost.objects.filter(category__category_name__iexact='tech', deleted_at__isnull=True)
     print(tech)
     return render(request, "blogs/tech_post.html", {'tech': tech})
 
 def life_category(request):
-    life = Blogpost.objects.filter(category__category_name__iexact='lifestyle')
+    life = Blogpost.objects.filter(category__category_name__iexact='lifestyle', deleted_at__isnull=True)
     print(life)
     return render(request, "blogs/life_post.html", {'life': life})
 
 def travel_category(request):
-    travel = Blogpost.objects.filter(category__category_name__iexact='travel')
+    travel = Blogpost.objects.filter(category__category_name__iexact='travel', deleted_at__isnull=True)
     print(travel)
     return render(request, "blogs/travel_post.html", {'travel': travel})
 
@@ -312,17 +345,30 @@ def send_blogger_request(request):
                 user=request.user,
                 requested_role='Blogger'
             )
-            
-            send_mail(
-                subject='New Blogger Access Request',
-                message=f'User {request.user.username} has requested blogger access.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=['manaschawla324@gmail.com'],  # Replace with real admin email
-                fail_silently=False,
+
+            admin_email = 'manaschawla324@gmail.com'
+            subject = "New Blogger Access Request"
+
+            html_content = render_to_string(
+                "blogs/emails/request_role.html",
+                {"user": request.user, "current_year": datetime.now().year}
             )
+
+            email = EmailMessage(
+                subject,
+                html_content,
+                settings.DEFAULT_FROM_EMAIL,
+                [admin_email]
+            )
+            email.content_subtype = "html"
+            email.send(fail_silently=False)  # Forces error if something goes wrong
+
+            return redirect('request_pending')
+
         return redirect('request_pending')
-    else:
-        return redirect('upload_blog')
+    return redirect('upload_blog')
+
+
     
 def request_pending(request):
     return render(request, 'blogs/request_pending.html')
@@ -344,9 +390,50 @@ def send_invoice_email(user, subscription):
     email.content_subtype = "html" 
     email.send()
     
-    
+@login_required
 def my_blogs(request):
-    blogs = Blogpost.objects.filter(author = request.user)
+    blogs = Blogpost.objects.filter(author = request.user,deleted_at__isnull=True)
     return render(request, 'blogs/author_blogs.html', {'blogdata': blogs})
+
+@login_required
+def delete_blog(request, post_id):
+    blog = get_object_or_404(Blogpost, post_id=post_id, author=request.user)
+    blog.deleted_at = timezone.now()
+    blog.save(update_fields=['deleted_at'])
+    messages.success(request, f'Your blog "{blog.title}" was deleted successfully.')
+    return redirect('my_blogs')
     
+
+@login_required
+def edit_blog(request, post_id):
+    blog = get_object_or_404(Blogpost, pk=post_id)
+
+    if request.method == "POST":
+        
+        blog.title = request.POST.get("title")
+        blog.head0 = request.POST.get("head0")
+        blog.head1 = request.POST.get("head1")
+        blog.head2 = request.POST.get("head2")
+        blog.chead0 = request.POST.get("chead0")
+        blog.chead1 = request.POST.get("chead1")
+        blog.chead2 = request.POST.get("chead2")
+
+        
+        if 'image_thumbnail' in request.FILES:
+            blog.image_thumbnail = request.FILES['image_thumbnail']
+        if 'image1' in request.FILES:
+            blog.image1 = request.FILES['image1']
+        if 'image2' in request.FILES:
+            blog.image2 = request.FILES['image2']
+
+        
+        blog.edited_by = request.user
+        blog.edited_at = timezone.now()
+
+        blog.save()
+
+        messages.success(request, "Blog updated successfully.")
+        return redirect("my_blogs")
+
+    return render(request, "blogs/edit_blog.html", {"blog": blog})
     

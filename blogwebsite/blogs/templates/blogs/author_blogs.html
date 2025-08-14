@@ -153,8 +153,21 @@
                 <!-- Read More Button -->
                  <div>
                 <a href="{% url 'fullview' post.post_id %}" class="btn btn-primary mt-2 read">Read More</a>
+                <a href="{% url 'edit_blog' post.post_id %}" class="btn btn-primary mt-2 ms-4 read">Edit</a>
+                <a href="{% url 'delete_blog' post.post_id %}" class="btn btn-danger mt-2 ms-4 read">Delete</a>
+{% if post.edited_by %}
+<div class="alert alert-info py-2 px-3 mt-3 mb-0 rounded-3 shadow-sm">
+    <small class="text-muted">
+        <i class="bi bi-pencil-square me-1"></i>
+        Last edited by <strong>{{ post.edited_by.username }}</strong> 
+        on {{ post.edited_at|date:"F j, Y, g:i a" }}
+    </small>
+</div>
+{% endif %}
 
                  </div>
+
+
 
             </div>
             {% endfor %}

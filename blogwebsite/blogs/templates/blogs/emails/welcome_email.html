@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Our Blog</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; color: #333;">
+
+    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; border: 1px solid #ddd;">
+        <h2 style="color: #28a745; text-align: center;">Welcome to Our Blog! 🎉</h2>
+        
+        <p>Hi <strong>{{ custom_user.user.username }}</strong>,</p>
+
+
+        <p>
+            Thank you for registering on <strong>My Blogs</strong>!  
+            We’re excited to have you join our community of passionate readers and writers.
+        </p>
+
+        <p>
+            Here’s what you can do as a member:
+        </p>
+
+        <ul>
+            <li>Read exclusive blog posts</li>
+            <li>Subscribe to premium content</li>
+            <li>Upload your own blogs</li>
+            <li>Connect with other bloggers</li>
+        </ul>
+
+        <p>
+            Get started by visiting our homepage:  
+            <a href="{{ site_url }}" style="color: #28a745; text-decoration: none;">Click here to explore →</a>
+        </p>
+
+        <hr style="border: 0; height: 1px; background: #ddd; margin: 20px 0;">
+
+        <p style="font-size: 14px; color: #555;">
+            If you have any questions, just reply to this email and we’ll be happy to help.  
+            <br>Welcome aboard! 🚀
+        </p>
+
+        <p style="font-weight: bold; margin-top: 20px;">Best regards,  
+        <br>The Blog Team</p>
+    </div>
+
+</body>
+</html>

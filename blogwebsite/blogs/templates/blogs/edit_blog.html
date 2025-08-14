@@ -1,0 +1,41 @@
+{% extends "blogs/basic.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit Blog</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label>Title</label>
+        <input type="text" name="title" value="{{ blog.title }}" class="form-control" required>
+
+        <label>Head 0</label>
+        <input type="text" name="head0" value="{{ blog.head0 }}" class="form-control">
+
+        <label>Head 1</label>
+        <input type="text" name="head1" value="{{ blog.head1 }}" class="form-control">
+
+        <label>Head 2</label>
+        <input type="text" name="head2" value="{{ blog.head2 }}" class="form-control">
+
+        <label>Content Head 0</label>
+        <textarea name="chead0" class="form-control">{{ blog.chead0 }}</textarea>
+
+        <label>Content Head 1</label>
+        <textarea name="chead1" class="form-control">{{ blog.chead1 }}</textarea>
+
+        <label>Content Head 2</label>
+        <textarea name="chead2" class="form-control">{{ blog.chead2 }}</textarea>
+
+        <label>Thumbnail Image</label>
+        <input type="file" name="image_thumbnail" class="form-control">
+
+        <label>Image 1</label>
+        <input type="file" name="image1" class="form-control">
+
+        <label>Image 2</label>
+        <input type="file" name="image2" class="form-control">
+
+        <button type="submit" class="btn btn-primary mt-3">Update Blog</button>
+    </form>
+</div>
+{% endblock %}

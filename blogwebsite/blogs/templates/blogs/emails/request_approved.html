@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="x-apple-disable-message-reformatting" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blogger Access Approved</title>
+<style>
+  @media (max-width:600px){
+    .container{width:100% !important}
+    .p-24{padding:18px !important}
+    .h1{font-size:20px !important}
+    .h2{font-size:16px !important}
+    .btn{display:block !important;width:100% !important;text-align:center !important}
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#f3f5f8;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f3f5f8;">
+    <tr>
+      <td align="center" style="padding:24px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="width:600px;max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 6px 24px rgba(16,24,40,0.08);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(90deg,#16a34a,#22c55e);padding:24px;" align="left">
+              <div style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:22px;line-height:28px;font-weight:700;color:#ffffff;">
+                Blogger Access Approved
+              </div>
+              <div style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:20px;color:#dcfce7;opacity:0.95;margin-top:4px;">
+                Congratulations! You can now publish blogs.
+              </div>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td class="p-24" style="padding:24px;" align="left">
+              <div style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#0f172a;">
+                Hello <strong style="color:#16a34a;">{{ user.username }}</strong>,
+              </div>
+              <div style="height:8px;line-height:8px;font-size:8px;">&nbsp;</div>
+              <div style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:24px;color:#0f172a;">
+                We’re excited to let you know that your request for <strong>Blogger</strong> access has been approved. You now have permission to create and publish blog posts on our platform.
+              </div>
+
+              <div style="height:16px;line-height:16px;font-size:16px;">&nbsp;</div>
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="background:#f0fdf4;padding:14px 16px;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;line-height:16px;letter-spacing:.08em;text-transform:uppercase;color:#15803d;font-weight:600;">
+                    Access Details
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:16px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#475569;width:160px;">Username</td>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#0f172a;"><strong>{{ user.username }}</strong></td>
+                      </tr>
+                      <tr>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#475569;width:160px;">Email</td>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#0f172a;">{{ user.email }}</td>
+                      </tr>
+                      <tr>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#475569;width:160px;">Role Granted</td>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#0f172a;"><span style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;padding:2px 8px;border-radius:999px;font-weight:600;">Blogger</span></td>
+                      </tr>
+                      <tr>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#475569;width:160px;">Approved On</td>
+                        <td style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#0f172a;">{{ current_year }}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="height:20px;line-height:20px;font-size:20px;">&nbsp;</div>
+
+              <div style="text-align:center;">
+                <a href="https://yourwebsite.com/blogs/create" class="btn" style="background:#16a34a;color:#ffffff;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;font-weight:600;line-height:24px;text-decoration:none;padding:12px 24px;border-radius:8px;display:inline-block;">
+                  Start Writing
+                </a>
+              </div>
+
+              <div style="height:24px;line-height:24px;font-size:24px;">&nbsp;</div>
+
+              <div style="font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:14px;line-height:22px;color:#475569;">
+                Remember to follow our <a href="https://yourwebsite.com/guidelines" style="color:#16a34a;text-decoration:none;">community guidelines</a> when publishing your content.  
+                We look forward to reading your posts!
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f8fafc;padding:16px;text-align:center;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;color:#94a3b8;">
+              &copy; {{ current_year }} Your Website. All rights reserved.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

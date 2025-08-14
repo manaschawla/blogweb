@@ -24,9 +24,12 @@ class Blogpost(models.Model):
     chead1=models.CharField(max_length=5000, default="")
     chead2=models.CharField(max_length=5000, default="")
     pub_date=models.DateField()
+    deleted_at = models.DateTimeField(null=True, blank=True) 
     image_thumbnail = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image1 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
     image2 = models.ImageField(upload_to="blogs/images", blank=True, null=True)
+    edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="edited_blogs")
+    edited_at = models.DateTimeField(null=True, blank=True)
 
     def total_likes(self):
         return self.likes.count()
@@ -56,9 +59,6 @@ class Custom_user(models.Model):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
-
-from django.db import models
-from django.contrib.auth.models import User
 
 class RequestRole(models.Model):
     ROLE_CHOICES = (

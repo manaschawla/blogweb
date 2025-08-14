@@ -2,29 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscription Invoice</title>
 </head>
-<body>
-    <h2>Invoice</h2>
-    <p>Hi {{ custom_user.first_name }},</p>
-    <p>Thank you for purchasing the <strong>{{ subscription.plan.name }}</strong> subscription.</p>
+<body style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
 
-    <table border="1" cellspacing="0" cellpadding="5">
-        <tr>
-            <th>Plan</th>
-            <th>Price</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-        </tr>
-        <tr>
-            <td>{{ subscription.plan.name }}</td>
-            <td>${{ subscription.plan.price }}</td>
-            <td>{{ subscription.start_date|date:"F j, Y" }}</td>
-            <td>{{ subscription.end_date|date:"F j, Y" }}</td>
-        </tr>
-    </table>
+    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; border: 1px solid #ddd;">
+        <h2 style="color: #444;">Invoice</h2>
+        <p>Hi {{ custom_user.first_name }},</p>
 
-    <p>We appreciate your business!</p>
+        <p>
+            Thank you for purchasing the
+            <strong>{{ subscription.plan.name }}</strong> subscription.
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Plan</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Price</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Start Date</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ccc; padding: 8px;">{{ subscription.plan.name }}</td>
+                    <td style="border: 1px solid #ccc; padding: 8px;">${{ subscription.plan.price|floatformat:2 }}</td>
+                    <td style="border: 1px solid #ccc; padding: 8px;">{{ subscription.start_date|date:"F j, Y" }}</td>
+                    <td style="border: 1px solid #ccc; padding: 8px;">{{ subscription.end_date|date:"F j, Y" }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="margin-top: 20px;">We appreciate your business!</p>
+        <p>Best regards,<br>The Blog Team</p>
+    </div>
+
 </body>
 </html>
