@@ -1,0 +1,22 @@
+{% extends "blogs/basic.html" %}
+{% block content %}
+<h2>Your Login History</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Date & Time</th>
+        <th>IP Address</th>
+        <th>Device</th>
+    </tr>
+    {% for login in logins %}
+    <tr>
+        <td>{{ login.login_time }}</td>
+        <td>{{ login.ip_address }}</td>
+        <td>{{ login.device_info }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No login history found.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

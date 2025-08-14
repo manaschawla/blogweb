@@ -16,6 +16,9 @@ from django.utils import timezone
 from datetime import timedelta
 import razorpay
 from django.conf import settings
+from django.contrib.auth.views import LoginView
+from django.utils.html import strip_tags
+from .models import LoginInstance
 # Create your views here.
 
 def register(request):
@@ -437,3 +440,50 @@ def edit_blog(request, post_id):
 
     return render(request, "blogs/edit_blog.html", {"blog": blog})
     
+
+class CustomLoginView(LoginView):
+    template_name = 'blogs/login.html'  
+    def form_valid(self, form):
+        response = super().form_valid(form) 
+
+
+        ip = self.get_client_ip()
+
+        device = self.request.META.get('HTTP_USER_AGENT', 'Unknown device')
+
+
+        LoginInstance.objects.create(
+            user=self.request.user,
+            ip_address=ip,
+            device_info=device
+        )
+
+
+        html_message = render_to_string('blogs/emails/login_notification.html', {
+            'user': self.request.user,
+            'ip': ip,
+            'device': device,
+        })
+        plain_message = strip_tags(html_message)
+
+        send_mail(
+            subject="New Login Detected",
+            message=plain_message,
+            from_email="noreply@yourwebsite.com",
+            recipient_list=[self.request.user.email],
+            html_message=html_message
+        )
+
+        return response
+
+    def get_client_ip(self):
+        """Extract the IP address from request"""
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[0]
+        return self.request.META.get('REMOTE_ADDR')
+    
+@login_required
+def login_history(request):
+    logins = LoginInstance.objects.filter(user=request.user).order_by('-login_time')
+    return render(request, 'blogs/login_history.html', {'logins': logins})
