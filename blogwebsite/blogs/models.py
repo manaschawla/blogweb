@@ -56,6 +56,8 @@ class Custom_user(models.Model):
     mobile_number = models.BigIntegerField(default=0)
     alternate_mobile_number = models.BigIntegerField(default=0)
     pincode = models.IntegerField(default=0)
+    otp_secret = models.CharField(max_length=32, blank=True, null=True)
+    is_2fa_enabled = models.BooleanField(default=False)
 
     
     def __str__(self):

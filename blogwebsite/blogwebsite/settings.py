@@ -116,11 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
-USE_TZ = True
+# Use your local time directly (from Windows)
+USE_TZ = False  
+
+# Set this to your local timezone name (optional if USE_TZ=False)
+TIME_ZONE = 'Asia/Kolkata'
 
 
 # Static files (CSS, JavaScript, Images)

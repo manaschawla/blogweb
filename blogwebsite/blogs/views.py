@@ -1,24 +1,36 @@
-from django.shortcuts import render,get_object_or_404
-from django.http import HttpResponse
-from django.core.mail import send_mail
-from .models import Blogpost,Custom_user, SubscriptionPlan,UserSubscription,Payment,Category,RequestRole
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from django.core.mail import EmailMessage
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from datetime import datetime
-from .forms import ProfileForm,SubscriptionSelectForm
-from django.shortcuts import redirect
-from django.contrib import messages
-from django.utils import timezone
-from datetime import timedelta
-import razorpay
+from datetime import datetime, timedelta
+
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.html import strip_tags
-from .models import LoginInstance
+import base64
+
+from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
+
+import pyotp
+import qrcode
+from io import BytesIO
+import razorpay
+
+from .models import (
+    Blogpost,
+    Custom_user,
+    SubscriptionPlan,
+    UserSubscription,
+    Payment,
+    Category,
+    RequestRole,
+    LoginInstance,
+)
+from .forms import ProfileForm, SubscriptionSelectForm
+
 # Create your views here.
 
 def register(request):
@@ -487,3 +499,44 @@ class CustomLoginView(LoginView):
 def login_history(request):
     logins = LoginInstance.objects.filter(user=request.user).order_by('-login_time')
     return render(request, 'blogs/login_history.html', {'logins': logins})
+
+@login_required
+def two_factor_auth(request):
+    custom_user = request.user.custom_user  # request.user is already your Custom_user model
+
+    # ✅ Ensure user has an OTP secret
+    if not custom_user.otp_secret:
+        custom_user.otp_secret = pyotp.random_base32()
+        custom_user.save()
+
+    totp = pyotp.TOTP(custom_user.otp_secret)
+
+    if request.method == "POST":
+        user_otp = request.POST.get("otp")
+        if totp.verify(user_otp, valid_window=1):  # 30s window tolerance
+            # Mark session as 2FA verified
+            request.session["is_2fa_verified"] = True
+            messages.success(request, "✅ Two-Factor Authentication successful!")
+            return redirect("home")   # change "home" to your dashboard/home URL name
+        else:
+            messages.error(request, "❌ Invalid or expired OTP. Please try again.")
+            return redirect("two_factor_auth")
+
+    else:
+        # Generate provisioning URI for Google Authenticator
+        otp_uri = totp.provisioning_uri(
+            name=custom_user.email,
+            issuer_name="MyBlogSite"
+        )
+
+        # Generate QR Code
+        img = qrcode.make(otp_uri)
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        qr_image_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+        return render(request, "blogs/otp.html", {"qr_code": qr_image_base64})
+
+
+
+

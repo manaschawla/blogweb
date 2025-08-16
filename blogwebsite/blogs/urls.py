@@ -37,4 +37,5 @@ path('my_blogs', views.my_blogs, name='my_blogs'),
 path('login_history', views.login_history, name='login_history'),
   path('blog/<int:post_id>/delete/', views.delete_blog, name='delete_blog'),
   path("blog/<int:post_id>/edit/", views.edit_blog, name="edit_blog"),
+     path('enable_2fa', views.two_factor_auth, name='enable_2fa'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
