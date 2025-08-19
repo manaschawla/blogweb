@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 
 from django.conf import settings
 from django.contrib import messages
@@ -123,7 +124,7 @@ def profile(request, user_id):
     user = User.objects.get(id=user_id)
     profile = Custom_user.objects.get(user=user)
     print(profile)
-    return render(request, 'blogs/profile.html', {'user_obj': user, 'profile': profile})
+    return render(request, 'blogs/profile.html', {'user': user, 'profile': profile})
 
 
 def contact(request):
@@ -522,40 +523,48 @@ def login_history(request):
 def two_factor_auth(request):
     custom_user = request.user.custom_user  
 
-    # Generate secret key if not present
+    # create secret if missing
     if not custom_user.otp_secret:
         custom_user.otp_secret = pyotp.random_base32()
-        custom_user.is_2fa_enabled = True  
         custom_user.save()
 
     totp = pyotp.TOTP(custom_user.otp_secret)
+    qr_code = None  
 
     if request.method == "POST":
         user_otp = request.POST.get("otp")
 
         if totp.verify(user_otp, valid_window=1):  
             request.session["is_2fa_verified"] = True
-            messages.success(request, "✅ OTP verified successfully! Welcome back.")  # ✅ success message
-            return redirect("home")  
+            custom_user.is_2fa_enabled = True 
+            custom_user.save()
+            return render(request, "blogs/otp.html", {"otp_success": True})
         else:
-            messages.error(request, "❌ Invalid or expired OTP. Please try again.")  # ❌ error message
-            return redirect("two_factor_auth")
+            return render(request, "blogs/otp.html", {"otp_error": "❌ Invalid or expired OTP"})
 
-    else:
-        qr_code = None  
+    if not custom_user.is_2fa_enabled:
+        otp_uri = totp.provisioning_uri(
+            name=custom_user.email,
+            issuer_name="MyBlogSite"
+        )
+        img = qrcode.make(otp_uri)
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        qr_code = base64.b64encode(buffer.getvalue()).decode()
 
-        # Generate QR code if user hasn’t enabled 2FA yet
-        if not custom_user.is_2fa_enabled:
-            otp_uri = totp.provisioning_uri(
-                name=custom_user.email,
-                issuer_name="MyBlogSite"
-            )
-            img = qrcode.make(otp_uri)
-            buffer = BytesIO()
-            img.save(buffer, format="PNG")
-            qr_code = base64.b64encode(buffer.getvalue()).decode()
+    return render(request, "blogs/otp.html", {"qr_code": qr_code})
 
-        return render(request, "blogs/otp.html", {"qr_code": qr_code})
+@login_required
+def disable_2fa(request):
+    custom_user = request.user.custom_user  
+
+    # disable 2FA
+    custom_user.is_2fa_enabled = False
+    custom_user.otp_secret = ""
+    custom_user.save()
+    return redirect("profile")  
+
+
 
 
 

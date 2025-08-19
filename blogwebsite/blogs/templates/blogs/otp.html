@@ -6,21 +6,42 @@
     <div class="card shadow p-4 rounded-4" style="max-width: 400px; width: 100%;">
         <h4 class="text-center mb-4">🔐 Two-Factor Authentication</h4>
         
-        <!-- QR Code Display -->
+        <!-- Show QR Code only if available -->
+        {% if qr_code %}
         <div class="text-center mb-4">
             <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid rounded">
-            <p class="mt-2 small text-muted">Scan this QR code in Google Authenticator or Authy</p>
+            <p class="mt-2 small text-muted">
+                Scan this QR code in Google Authenticator or Authy
+            </p>
         </div>
+        {% endif %}
 
         <!-- OTP Form -->
         <form method="POST">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="otp" class="form-label">Enter OTP</label>
-                <input type="text" name="otp" id="otp" class="form-control" placeholder="Enter 6-digit code" required>
+                <input type="text" name="otp" id="otp" 
+                       class="form-control" placeholder="Enter 6-digit code" 
+                       maxlength="6" pattern="[0-9]{6}" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
         </form>
     </div>
 </div>
+
+<!-- JS Messages -->
+{% if otp_success %}
+<script>
+    alert("✅ OTP verified successfully! Redirecting to home...");
+    window.location.href = "{% url 'home' %}";
+</script>
+{% endif %}
+
+{% if otp_error %}
+<script>
+    alert("{{ otp_error }}");
+</script>
+{% endif %}
 {% endblock %}
+
