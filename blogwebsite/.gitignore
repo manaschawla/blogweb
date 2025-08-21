@@ -1,0 +1,27 @@
+# Environment & virtualenv
+.env
+*.env
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+
+# Logs
+*.log
+
+# Media & static (generated files)
+media/
+staticfiles/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
