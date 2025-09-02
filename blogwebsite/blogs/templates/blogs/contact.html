@@ -1,0 +1,123 @@
+{% extends 'blogs/basic.html' %}
+{% load static %}
+{% block head %}
+<style>
+      .contact-header {
+    background: linear-gradient(to right, #0d6efd, #6c63ff);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .contact-form {
+    background-color: #f8f9fa;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  .contact-form input, .contact-form textarea {
+    border-radius: 8px;
+  }
+
+  .contact-info {
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+  }
+
+  .contact-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #0d6efd;
+  }
+
+  .map-container {
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  .map-container iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    border: none;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="contact-header">
+  <h1>Get in Touch</h1>
+  <p>We’re here to help and answer any question you might have. We look forward to hearing from you. 🤝</p>
+</div>
+
+<div class="container my-5">
+  <div class="row">
+
+    <!-- Contact Form -->
+    <div class="col-md-6 mb-4">
+      <div class="contact-form">
+        <h4 class="mb-4">Send us a message</h4>
+        <form method="post" action="/shop/contact/" id = "myForm">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" class="form-control" name="phone" id="phone" placeholder="+91 9876543210" required>
+          </div>
+          <div class="form-group">
+            <label for="desc">Your Message</label>
+            <textarea class="form-control" name="desc" id="desc" rows="5" placeholder="Type your message here..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        </form>
+</script>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="col-md-6 mb-4">
+      <div class="contact-info">
+        <h4 class="mb-4">Contact Information</h4>
+       <p>
+  <span class="contact-icon">&#128222;</span>
+  <strong>Phone:</strong> 
+  <a href="tel:+919876543210">+91-9876543210</a>
+</p>
+
+<p>
+  <span class="contact-icon">&#128231;</span>
+  <strong>Email:</strong> 
+  <a href="mailto:support@myBlogs.com">support@myBlogs.com</a>
+</p>
+
+        <p><span class="contact-icon">&#127968;</span> <strong>Address:</strong> Yamunanagar, Haryana, India</p>
+        <p><span class="contact-icon">&#128337;</span> <strong>Working Hours:</strong> Mon - Sat: 9am - 6pm</p>
+      </div>
+    </div>
+  </div>
+
+ 
+  <div class="map-container mt-5">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3445.9874709186073!2d77.28854231506456!3d30.129823881846282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ee7c1436e8017%3A0x1b52cc15b0f79d58!2sYamunanagar%2C%20Haryana!5e0!3m2!1sen!2sin!4v1684755555555"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+{% endblock %}

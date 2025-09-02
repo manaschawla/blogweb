@@ -1,31 +1,62 @@
 {% extends 'blogs/basic.html' %}
 {% load static %}
 
-{%block content%}
-<div class="container">
-    <h2>You're Subscribing to: {{ plan.name }}</h2>
-<p>Price: ₹{{ plan.price }}</p>
-<p>Features:
-</p>
- <ul>
-      {% for feature in plan.feature_list %}
-        <li>{{ feature }}</li>
-      {% empty %}
-        <li>No features listed.</li>
-      {% endfor %}
-    </ul>
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card shadow-lg p-4 rounded-3 border-0" style="max-width: 700px; width: 100%;">
+        
+        <!-- Plan Details -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">You're Subscribing to: {{ plan.name }}</h2>
+            <h4 class="text-success">₹{{ plan.price }}</h4>
+        </div>
 
-<form method="post">
-    {% csrf_token %}
-    <label>Select Payment Method:</label><br>
-    <input type="radio" name="payment_method" value="upi" required> UPI<br>
-    <input type="radio" name="payment_method" value="bank"> Bank Transfer<br>
-    <input type="radio" name="payment_method" value="cod"> Cash on Delivery<br>
-    <input type="radio" name="payment_method" value="cards"> Cards<br>
-    <input type="radio" name="payment_method" value="netbanking"> Net Banking<br><br>
+        <!-- Features -->
+        <div class="mb-4">
+            <h5 class="fw-bold">Features Included:</h5>
+            <ul class="list-group list-group-flush">
+                {% for feature in plan.feature_list %}
+                    <li class="list-group-item">{{ feature }}</li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No features listed.</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <button type="submit" class="btn btn-success">Proceed to Payment</button>
-</form>
+        <!-- Payment Options -->
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <h5 class="fw-bold mb-2">Select Payment Method:</h5>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" value="upi" required>
+                <label class="form-check-label">UPI</label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" value="bank">
+                <label class="form-check-label">Bank Transfer</label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" value="cod">
+                <label class="form-check-label">Cash on Delivery</label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" value="cards">
+                <label class="form-check-label">Cards</label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="payment_method" value="netbanking">
+                <label class="form-check-label">Net Banking</label>
+            </div>
 
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-lg btn-success px-5 shadow-sm">Proceed to Payment</button>
+            </div>
+        </form>
+    </div>
 </div>
-{%endblock%}
+{% endblock %}

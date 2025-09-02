@@ -18,9 +18,8 @@
 
   .founder-img {
     width: 100%;
+    height: auto;       /* keep natural aspect ratio */
     border-radius: 12px;
-    height: 300px;
-    object-fit: cover;
   }
 
   .service-box {
@@ -46,7 +45,7 @@
 {% block content %}
 <div class="container about-section">
 
-  <!-- Company Introduction -->
+
   <div class="mb-5">
     <h2 class="section-title">About My Blogs</h2>
     <p>
@@ -57,10 +56,10 @@
     </p>
   </div>
 
-  <!-- Founder Section -->
+
   <div class="mb-5 row align-items-center">
     <div class="col-md-5">
-      <img src="{% static 'shop/manas-chawla.jpg' %}" alt="Founder Image" class="founder-img">
+      <img src="{% static 'blogs/images/founder.jpeg' %}" alt="Founder Image" class="founder-img">
     </div>
     <div class="col-md-7">
       <h2 class="section-title">Meet Our Founder</h2>
@@ -73,7 +72,7 @@
     </div>
   </div>
 
-  <!-- Our Services -->
+
   <div class="mb-5">
     <h2 class="section-title">What We Offer</h2>
     <div class="row">
@@ -112,5 +111,5 @@
     </p>
   </div>
 
-</div>
+</div> 
 {% endblock %}

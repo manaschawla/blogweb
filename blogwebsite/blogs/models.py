@@ -161,3 +161,12 @@ class LoginInstance(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.login_time}"
 
+class Contact(models.Model):
+    msg_id=models.AutoField(primary_key = True)
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=50)
+    desc= models.CharField(max_length=500, default="")
+    phone= models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.name)

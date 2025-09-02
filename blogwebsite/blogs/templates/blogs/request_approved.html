@@ -1,8 +1,19 @@
 {% extends 'blogs/basic.html' %}
 {% load static %}
 
-{%block content%}
-<h1>Your request has been approved!</h1>
-<p><a href="{% url 'upload' %}">Continue to Upload Blog</a></p>
-{%endblock%}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="card shadow-lg p-4 rounded-3 border-0" style="max-width: 600px; margin: auto;">
+        <div class="mb-3">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="fw-bold text-success">Your Request Has Been Approved!</h2>
+        <p class="text-muted mt-3">You can now upload your blogs and share your thoughts with the world.</p>
+        
+        <a href="{% url 'upload' %}" class="btn btn-primary btn-lg mt-4 shadow-sm">
+            Continue to Upload Blog
+        </a>
+    </div>
+</div>
+{% endblock %}
 

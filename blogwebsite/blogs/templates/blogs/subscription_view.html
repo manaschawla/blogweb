@@ -2,27 +2,74 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-  {% if subscription %}
-    <h3>Your Plan: {{ subscription.plan.name }}</h3>
-    <p>Active from {{ subscription.start_date|date:"M j, Y" }} 
-      to {{ subscription.end_date|date:"M j, Y" }}.</p>
-    <p>Status: {{ subscription.is_active|yesno:"Active,Expired" }}</p>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
 
-    <h5 class="mt-4">Plan Features:</h5>
-    <ul>
-      {% for feature in subscription.plan.feature_list %}
-        <li>{{ feature }}</li>
-      {% empty %}
-        <li>No features listed.</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p><em>No active subscription.</em> 
-       <a href="{% url 'subscribe' %}" class="btn btn-primary">
-         Subscribe Now
-       </a>
-    </p>
-  {% endif %}
+      {% if subscription %}
+        <!-- Subscription Card -->
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header text-white rounded-top-4"
+               style="background: linear-gradient(135deg, #007bff, #6610f2);">
+            <h3 class="mb-0 text-center">📦 Your Subscription</h3>
+          </div>
+
+          <div class="card-body p-4">
+            <h4 class="text-center mb-3">
+              <span class="badge bg-primary fs-5">{{ subscription.plan.name }}</span>
+            </h4>
+
+            <p class="text-center text-muted">
+              Active from <strong>{{ subscription.start_date|date:"M j, Y" }}</strong>
+              to <strong>{{ subscription.end_date|date:"M j, Y" }}</strong>
+            </p>
+
+            <p class="text-center">
+              <span class="badge {% if subscription.is_active %}bg-success{% else %}bg-danger{% endif %} px-3 py-2 fs-6">
+                {{ subscription.is_active|yesno:"✅ Active,❌ Expired" }}
+              </span>
+            </p>
+
+            <!-- Features List -->
+            <h5 class="mt-4">✨ Plan Features</h5>
+            <ul class="list-group list-group-flush rounded-3 shadow-sm">
+              {% for feature in subscription.plan.feature_list %}
+                <li class="list-group-item d-flex align-items-center">
+                  ✅ <span class="ms-2">{{ feature }}</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item text-muted">No features listed.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+      {% else %}
+        <!-- No Subscription -->
+        <div class="text-center p-5 shadow rounded-4 bg-light">
+          <h4 class="mb-3">🚫 No Active Subscription</h4>
+          <p class="text-muted">Looks like you haven’t subscribed yet.</p>
+          <a href="{% url 'subscribe' %}" class="btn btn-gradient rounded-pill px-4 py-2 mt-3">
+            🚀 Subscribe Now
+          </a>
+        </div>
+
+        <!-- Custom Gradient Button -->
+        <style>
+          .btn-gradient {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            transition: 0.3s;
+          }
+          .btn-gradient:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+            transform: scale(1.05);
+          }
+        </style>
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -2,24 +2,31 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
-  <h2 class="text-center mb-4">Pay with Razorpay</h2>
-  <p>Plan: <strong>{{ plan.name }}</strong></p>
-  <p>Amount: ₹{{ plan.price }}</p>
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4 rounded-3" style="max-width: 500px; width: 100%;">
+    <h2 class="text-center mb-4 text-primary">Pay with Razorpay</h2>
+    <hr>
+    <p class="mb-1"><strong>Plan:</strong> {{ plan.name }}</p>
+    <p class="mb-3"><strong>Amount:</strong> ₹{{ plan.price }}</p>
 
-  <form action="{% url 'payment_success' plan.id %}" method="POST">
-    <script
-      src="https://checkout.razorpay.com/v1/checkout.js"
-      data-key="{{ razorpay_key }}"
-      data-amount="{{ payment.amount }}"
-      data-currency="INR"
-      data-order_id="{{ payment.id }}"
-      data-buttontext="Pay with Razorpay"
-      data-name="Your Blog"
-      data-description="Subscription Payment"
-      data-theme.color="#3399cc">
-    </script>
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-  </form>
+    <form action="{% url 'payment_success' plan.id %}" method="POST">
+      <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ payment.amount }}"
+        data-currency="INR"
+        data-order_id="{{ payment.id }}"
+        data-buttontext="Pay with Razorpay"
+        data-name="Your Blog"
+        data-description="Subscription Payment"
+        data-theme.color="#0d6efd">
+      </script>
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    </form>
+
+    <p class="text-center mt-3 text-muted" style="font-size: 0.9rem;">
+      Secure payments powered by Razorpay 🔒
+    </p>
+  </div>
 </div>
 {% endblock %}

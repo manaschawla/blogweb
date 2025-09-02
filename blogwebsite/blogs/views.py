@@ -29,6 +29,7 @@ from .models import (
     Category,
     RequestRole,
     LoginInstance,
+    Contact
 )
 from .forms import ProfileForm, SubscriptionSelectForm
 
@@ -218,7 +219,7 @@ def pay_method(request,plan_id):
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method')
 
-        if payment_method in ['upi', 'cod']:
+        if payment_method in ['cod']:
             Payment.objects.create(
                 user=request.user,
                 plan=plan,
@@ -231,9 +232,8 @@ def pay_method(request,plan_id):
             return render(request, 'blogs/success.html', {'plan': plan})
         
 
-        elif payment_method in ['bank', 'cards', 'netbanking']:
+        elif payment_method in ['bank', 'cards', 'netbanking', 'upi']:
             subscription = UserSubscription.objects.get(user=request.user)
-            send_invoice_email(request.user, subscription)
             return redirect('razorpay_payment', plan_id=plan.id)
 
     return render(request, 'blogs/select_pay_method.html', {'plan': plan})
@@ -273,6 +273,26 @@ def razorpay_payment_view(request,plan_id):
 def payment_success(request, plan_id):
     return render(request, 'blogs/success.html')
 
+def razorpay_success(request, plan_id):
+    plan = get_object_or_404(SubscriptionPlan, id=plan_id)
+
+    # Verify Razorpay payment first (signature check etc.)
+    # Assuming verification is done...
+
+    # Save successful payment
+    Payment.objects.create(
+        user=request.user,
+        plan=plan,
+        payment_method='razorpay',
+        status='success',
+        amount=plan.price,
+    )
+
+    # Now send invoice
+    subscription = UserSubscription.objects.get(user=request.user)
+    send_invoice_email(request.user, subscription)
+
+    return render(request, 'blogs/success.html', {'plan': plan})
 
 def food_category(request):
     food = Blogpost.objects.filter(category__category_name__iexact='food', deleted_at__isnull=True)
@@ -565,7 +585,15 @@ def disable_2fa(request):
     return redirect("profile")  
 
 
-
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        desc = request.POST.get('desc')
+        contact = Contact(name = name, email = email, desc = desc, phone = phone)
+        contact.save()
+    return render(request, 'blogs/contact.html')
 
 
 

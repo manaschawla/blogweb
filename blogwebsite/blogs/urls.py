@@ -40,5 +40,6 @@ path('login_history', views.login_history, name='login_history'),
      path('enable_2fa', views.two_factor_auth, name='enable_2fa'),
       path("otp/", views.two_factor_auth, name="two_factor_auth"),
       path("disable-2fa/", views.disable_2fa, name="disable_2fa"),
-
+path('razorpay/success/<int:plan_id>/', views.razorpay_success, name='razorpay_success'),
+path("contact/", views.contact, name = "contact"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

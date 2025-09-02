@@ -1,15 +1,23 @@
 {% extends 'blogs/basic.html' %}
 {% load static %}
 
-{%block content%}
-<div class="container">
-<h2>You are not allowed to upload blogs.</h2>
-<p>Please request access to become a Blogger.</p>
-
-<form method="POST" action="{% url 'send_blogger_request' %}">
-    {% csrf_token %}
-    <button type="submit">Request Blogger Access</button>
-</form>
-
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4 rounded-3 border-0 text-center" style="max-width: 600px; width: 100%;">
+        
+        <div class="mb-3">
+            <i class="bi bi-exclamation-circle-fill text-warning" style="font-size: 3.5rem;"></i>
+        </div>
+        
+        <h2 class="fw-bold text-danger">Access Denied</h2>
+        <p class="text-muted mt-2">You are not allowed to upload blogs. Please request access to become a Blogger.</p>
+        
+        <form method="POST" action="{% url 'send_blogger_request' %}" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                Request Blogger Access
+            </button>
+        </form>
+    </div>
 </div>
-{%endblock%}
+{% endblock %}
